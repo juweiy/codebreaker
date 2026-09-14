@@ -1,44 +1,64 @@
-import { NextLogo } from './next-logo';
-import { SupabaseLogo } from './supabase-logo';
+import { Button } from '@/components/ui/button';
+import { HeroHook } from '@/components/hero-hook';
+import { Route } from '@/lib/string-utils';
+import { ArrowRight, Radio, ScanLine, Users } from 'lucide-react';
+import Link from 'next/link';
 
 export function Hero() {
   return (
-    <div className="flex flex-col gap-16 items-center">
-      <div className="flex gap-8 justify-center items-center">
-        <a
-          href="https://supabase.com/?utm_source=create-next-app&utm_medium=template&utm_term=nextjs"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <SupabaseLogo />
-        </a>
-        <span className="border-l rotate-45 h-6" />
-        <a href="https://nextjs.org/" target="_blank" rel="noreferrer">
-          <NextLogo />
-        </a>
-      </div>
-      <h1 className="sr-only">Supabase and Next.js Starter Template</h1>
-      <p className="text-3xl lg:text-4xl !leading-tight mx-auto max-w-xl text-center">
-        The fastest way to build apps with{' '}
-        <a
-          href="https://supabase.com/?utm_source=create-next-app&utm_medium=template&utm_term=nextjs"
-          target="_blank"
-          className="font-bold hover:underline"
-          rel="noreferrer"
-        >
-          Supabase
-        </a>{' '}
-        and{' '}
-        <a
-          href="https://nextjs.org/"
-          target="_blank"
-          className="font-bold hover:underline"
-          rel="noreferrer"
-        >
-          Next.js
-        </a>
-      </p>
-      <div className="w-full p-[1px] bg-gradient-to-r from-transparent via-foreground/10 to-transparent my-8" />
-    </div>
+    <>
+      <section className="flex min-h-[calc(100svh-4rem)] items-center justify-center py-20 lg:py-28">
+        <div className="page-shell flex max-w-5xl flex-col items-center text-center">
+          <HeroHook />
+          <p className="mt-7 max-w-2xl text-pretty text-lg leading-8 text-muted-foreground sm:text-xl">
+            Keep the clues in the real world while CodeBreaker handles answers,
+            unlocks, timing, and your whole team&apos;s progress.
+          </p>
+          <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
+            <Button asChild size="lg" variant="primary">
+              <Link href={Route.SignUp}>
+                Build a game <ArrowRight aria-hidden="true" />
+              </Link>
+            </Button>
+            <Button asChild size="lg" variant="secondary">
+              <Link href={Route.Join}>Join with a room code</Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-y bg-muted/30 py-20">
+        <div className="page-shell grid gap-8 md:grid-cols-3">
+          {[
+            {
+              icon: ScanLine,
+              title: 'Bring any story to life',
+              body: 'Create text or number puzzles that connect naturally to props, locks, QR clues, and physical spaces.',
+            },
+            {
+              icon: Users,
+              title: 'One shared team progress',
+              body: 'Every solve and unlock reaches the whole room so players always see the same game state.',
+            },
+            {
+              icon: Radio,
+              title: 'Run it from anywhere',
+              body: 'Launch, pause, and monitor rooms live while players join from their own phones.',
+            },
+          ].map((feature) => (
+            <article
+              key={feature.title}
+              className="rounded-2xl border bg-card p-6"
+            >
+              <feature.icon className="size-6" aria-hidden="true" />
+              <h2 className="mt-5 text-lg font-semibold">{feature.title}</h2>
+              <p className="mt-2 leading-7 text-muted-foreground">
+                {feature.body}
+              </p>
+            </article>
+          ))}
+        </div>
+      </section>
+    </>
   );
 }

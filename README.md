@@ -1,105 +1,125 @@
-<a href="https://demo-nextjs-with-supabase.vercel.app/">
-  <img alt="Next.js and Supabase Starter Kit - the fastest way to build apps with Next.js and Supabase" src="https://demo-nextjs-with-supabase.vercel.app/opengraph-image.png">
-  <h1 align="center">Next.js and Supabase Starter Kit</h1>
-</a>
+# CodeBreaker
 
-<p align="center">
- The fastest way to build apps with Next.js and Supabase
-</p>
+CodeBreaker is a digital game master for physical escape rooms, scavenger hunts,
+and puzzle games. Clues and props remain in the real world while the app handles
+answers, shared progress, puzzle unlocks, timers, and multiplayer rooms.
 
-<p align="center">
-  <a href="#features"><strong>Features</strong></a> ·
-  <a href="#demo"><strong>Demo</strong></a> ·
-  <a href="#deploy-to-vercel"><strong>Deploy to Vercel</strong></a> ·
-  <a href="#clone-and-run-locally"><strong>Clone and run locally</strong></a> ·
-  <a href="#feedback-and-issues"><strong>Feedback and issues</strong></a>
-  <a href="#more-supabase-examples"><strong>More Examples</strong></a>
-</p>
-<br/>
+## MVP features
 
-## Features
+### Game masters
 
-- Works across the entire [Next.js](https://nextjs.org) stack
-  - App Router
-  - Pages Router
-  - Middleware
-  - Client
-  - Server
-  - It just works!
-- supabase-ssr. A package to configure Supabase Auth to use cookies
-- Password-based authentication block installed via the [Supabase UI Library](https://supabase.com/ui/docs/nextjs/password-based-auth)
-- Styling with [Tailwind CSS](https://tailwindcss.com)
-- Components with [shadcn/ui](https://ui.shadcn.com/)
-- Optional deployment with [Supabase Vercel Integration and Vercel deploy](#deploy-your-own)
-  - Environment variables automatically assigned to Vercel project
+- Create, edit, archive, restore, and delete games.
+- Choose sequential or open-order puzzle progression.
+- Create and reorder text or number-answer puzzles.
+- Set separate player messages for completing the game and running out of time.
+- Launch rooms with an optional password and time limit.
+- Share a six-character room code or direct join link.
+- Start, pause, resume, end, and delete rooms.
+- Track players, puzzle solves, and progress from the room dashboard.
 
-## Demo
+### Players
 
-You can view a fully working demo at [demo-nextjs-with-supabase.vercel.app](https://demo-nextjs-with-supabase.vercel.app/).
+- Join through a link or with a room code and optional password.
+- Use a nickname; no account is required.
+- Return as the same player when reopening a room on the same browser.
+- See room status, player count, progress, and time remaining.
+- Submit answers without puzzle answers ever reaching the browser.
+- Receive shared solves and puzzle unlocks through automatic polling.
+- In open-order games, choose any available puzzle.
 
-## Deploy to Vercel
+## Technology
 
-Vercel deployment will guide you through creating a Supabase account and project.
+- Next.js 16 App Router, React 19, and TypeScript
+- Tailwind CSS and Radix/shadcn-style components
+- Neon Auth and Neon serverless Postgres
+- Drizzle ORM and Drizzle Kit
+- Secure Next.js route handlers for all reads and writes
+- Node's built-in test runner for domain rules
 
-After installation of the Supabase integration, all relevant environment variables will be assigned to the project so the deployment is fully functioning.
+## Local setup
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&project-name=nextjs-with-supabase&repository-name=nextjs-with-supabase&demo-title=nextjs-with-supabase&demo-description=This+starter+configures+Supabase+Auth+to+use+cookies%2C+making+the+user%27s+session+available+throughout+the+entire+Next.js+app+-+Client+Components%2C+Server+Components%2C+Route+Handlers%2C+Server+Actions+and+Middleware.&demo-url=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2F&external-id=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&demo-image=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2Fopengraph-image.png)
-
-The above will also clone the Starter kit to your GitHub, you can clone that locally and develop locally.
-
-If you wish to just develop locally and not deploy to Vercel, [follow the steps below](#clone-and-run-locally).
-
-## Clone and run locally
-
-1. You'll first need a Supabase project which can be made [via the Supabase dashboard](https://database.new)
-
-2. Create a Next.js app using the Supabase Starter template npx command
+1. Install dependencies:
 
    ```bash
-   npx create-next-app --example with-supabase with-supabase-app
+   npm install
    ```
+
+2. In the [Neon Console](https://console.neon.tech), create a project and enable
+   Neon Auth for its main branch. Copy the pooled database connection string and
+   the Neon Auth base URL.
+
+3. Copy `.env.example` to `.env.local` and set all three values:
+
+   ```dotenv
+   DATABASE_URL=postgresql://user:password@host/database?sslmode=require
+   NEON_AUTH_BASE_URL=https://ep-example.neonauth.region.aws.neon.tech/neondb/auth
+   NEON_AUTH_COOKIE_SECRET=a-random-secret-at-least-32-characters-long
+   ```
+
+   Generate the cookie secret with `openssl rand -base64 32`, or use any secure
+   password generator. Keep this secret stable between deployments.
+
+4. Create the application tables from the Drizzle schema:
 
    ```bash
-   yarn create next-app --example with-supabase with-supabase-app
+   npm run db:push
    ```
 
-   ```bash
-   pnpm create next-app --example with-supabase with-supabase-app
-   ```
+   Equivalent SQL files are available in [`db/migrations`](db/migrations) if
+   you prefer Neon's SQL Editor. Apply them in numbered order.
 
-3. Use `cd` to change into the app's directory
-
-   ```bash
-   cd with-supabase-app
-   ```
-
-4. Rename `.env.example` to `.env.local` and update the following:
-
-   ```
-   NEXT_PUBLIC_SUPABASE_URL=[INSERT SUPABASE PROJECT URL]
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=[INSERT SUPABASE PROJECT API ANON KEY]
-   ```
-
-   Both `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` can be found in [your Supabase project's API settings](https://supabase.com/dashboard/project/_?showConnect=true)
-
-5. You can now run the Next.js local development server:
+5. Start the app:
 
    ```bash
    npm run dev
    ```
 
-   The starter kit should now be running on [localhost:3000](http://localhost:3000/).
+   Next.js uses `http://localhost:3000` by default. Use
+   `npm run dev -- --port 3100` if port 3000 is occupied.
 
-6. This template comes with the default shadcn/ui style initialized. If you instead want other ui.shadcn styles, delete `components.json` and [re-install shadcn/ui](https://ui.shadcn.com/docs/installation/next)
+## Deployment
 
-> Check out [the docs for Local Development](https://supabase.com/docs/guides/getting-started/local-development) to also run Supabase locally.
+For Vercel, import the repository, connect the project to Neon, and add the same
+three environment variables for Production and Preview. Run `npm run db:push`
+against the production connection string once before the first public test.
+Vercel then builds the app with `npm run build`.
 
-## Feedback and issues
+## Quality checks
 
-Please file feedback and issues over on the [Supabase GitHub org](https://github.com/supabase/supabase/issues/new/choose).
+```bash
+npm run format:check
+npm run lint
+npm run typecheck
+npm test
+npm run build
+```
 
-## More Supabase examples
+Run the complete suite with `npm run check`.
 
-- [Next.js Subscription Payments Starter](https://github.com/vercel/nextjs-subscription-payments)
-- [Cookie-based Auth and the Next.js 13 App Router (free course)](https://youtube.com/playlist?list=PL5S4mPUpp4OtMhpnp93EFSo42iQ40XjbF)
-- [Supabase Auth and the Next.js App Router](https://github.com/supabase/supabase/tree/master/examples/auth/nextjs)
+## Data and security model
+
+- Game ownership is derived from the verified Neon Auth server session.
+- The Neon connection string remains server-only; clients can access data only
+  through validated route handlers.
+- Room passwords are hashed with Node's `scrypt`; raw passwords are never stored.
+- Puzzle answers are read only inside the server-side answer-checking function.
+  Player responses contain correctness and current room state, never the answer.
+- Anonymous players receive a random session token when joining. It is stored in
+  local storage and required for room state and answer submissions.
+- Player and room-control clients poll every two seconds, keeping shared state in
+  sync without requiring a second realtime provider.
+- Puzzle solves belong to the room, so one correct answer advances the team.
+
+## Core entities
+
+- **Game:** title, description, success and time-up messages, active/archived
+  status, and sequential/open-order mode.
+- **Puzzle:** ordered clue, optional description, answer type, and normalized
+  answer.
+- **Game room:** a live game instance with a join code, password, timer, and
+  lifecycle status.
+- **Room player:** nickname and device session for one room.
+- **Room solve:** the first correct solution of a puzzle in a room.
+
+This remains a personal learning project with a foundation that can grow into a
+larger hosted product.

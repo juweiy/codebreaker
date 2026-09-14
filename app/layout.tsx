@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { Geist } from 'next/font/google';
 import { ThemeProvider } from 'next-themes';
 import './globals.css';
 
@@ -9,15 +8,13 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
-  title: 'codebreaker',
-  description: 'The fastest way to build apps with Next.js and Supabase',
+  title: {
+    default: 'CodeBreaker',
+    template: '%s · CodeBreaker',
+  },
+  description:
+    'The digital game master for real-world escape rooms and puzzle games.',
 };
-
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  display: 'swap',
-  subsets: ['latin'],
-});
 
 export default function RootLayout({
   children,
@@ -26,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.className} antialiased`}>
+      <body className="antialiased">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
